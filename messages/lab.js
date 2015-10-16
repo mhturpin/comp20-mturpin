@@ -4,7 +4,7 @@ function parse() {
 	request.onload = function() {
 		var msg = JSON.parse(request.responseText);
 		for (var i = 0; i < msg.length; i++) {
-			document.getElementById("messages") += "<p>" + msg[i]["content"] + " " + msg[i]["username"] + "</p>";
+			document.getElementById("messages").innerHTML += "<p>" + msg[i]["content"] + " " + msg[i]["username"] + "</p>";
 		};
 	}
 	request.send();
