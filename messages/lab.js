@@ -2,8 +2,10 @@ function parse() {
 	var request = new XMLHttpRequest();
 	request.open("GET", "data.json", true);
 	request.onload = function() {
-		var messages = JSON.parse(request.responseText);
-		console.log(messages);
+		var msg = JSON.parse(request.responseText);
+		for (var i = 0; i < msg.length; i++) {
+			document.getElementById("messages") += "<p>" + msg[i]["content"] + " " + msg[i]["username"] + "</p>";
+		};
 	}
 	request.send();
 }
