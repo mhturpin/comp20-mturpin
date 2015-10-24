@@ -2,16 +2,33 @@
 <html>
 	<head>
 		<title>Map Chat</title>
-		<script src="https://secret-about-box.herokuapp.com/sendLocation"></script>
 		<script>
+			var request = new XMLHttpRequest();
+			var url = "https://secret-about-box.herokuapp.com/sendLocation";
+			request.open("POST", url, true);
+			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			var params = "", parsed;
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(function(position) {
 					lat = position.coords.latitude;
 					lon = position.coords.longitude;
+					params = "login=IMConnell&lat="+lat+"&lng="+lon+"&message="+"Hello classmates";
+					params = encodeURIComponent(params);
+					request.send(params);
+					console.log(params);
 				});
 			}
-			data = sendLocation("IMConnell", lat, lon, "Hello classmates");
-			console.log(data);
+
+			request.onreadystatechange = function() {
+				if (request.readyState == 4 && request.status == 200) {
+					data = request.responseText;
+					parsed = JSON.parse(data);
+					console.log(parsed);
+				}
+			};
+
+			
 		</script>
 	</head>
 	<body>
