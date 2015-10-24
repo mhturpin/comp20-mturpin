@@ -13,10 +13,9 @@
 				navigator.geolocation.getCurrentPosition(function(position) {
 					lat = position.coords.latitude;
 					lon = position.coords.longitude;
-					params = "login=IMConnell&lat="+lat+"&lng="+lon+"&message="+"Hello classmates";
-					params = encodeURIComponent(params);
-					request.send(params);
+					params = "login=IMConnell&lat="+lat+"&lng="+lon+"&message="+"hi";
 					console.log(params);
+					request.send(params);
 				});
 			}
 
