@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Map Chat</title>
+		<script src="https://secret-about-box.herokuapp.com/sendLocation"></script>
+		<script>
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					lat = position.coords.latitude;
+					lon = position.coords.longitude;
+				});
+			}
+			data = sendLocation("IMConnell", lat, lon, "Hello classmates");
+			console.log(data);
+		</script>
+	</head>
+	<body>
+		<div>
+			<h1>Map Chat</h1>
+		</div>
+	</body>
+<html>
