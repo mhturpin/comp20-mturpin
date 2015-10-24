@@ -2,18 +2,18 @@
 <html>
 	<head>
 		<title>Map Chat</title>
+		<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
 		<script>
 			var request = new XMLHttpRequest();
 			var url = "https://secret-about-box.herokuapp.com/sendLocation";
 			request.open("POST", url, true);
 			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-			var params = "", parsed;
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(function(position) {
 					lat = position.coords.latitude;
 					lon = position.coords.longitude;
-					params = "login=IMConnell&lat="+lat+"&lng="+lon+"&message="+"hi";
+					params = "login=IMConnell&lat="+lat+"&lng="+lon+"&message="+"Hello there";
 					console.log(params);
 					request.send(params);
 				});
@@ -27,12 +27,16 @@
 				}
 			};
 
+			function initialize() {
+				myLocation = new google.maps.LatLng({lat: lat, lng: lon});
+
+				myOptions = {center: myLocation};
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+			}
 			
 		</script>
 	</head>
-	<body>
-		<div>
-			<h1>Map Chat</h1>
-		</div>
+	<body onload="initialize()">
+		<div id="map_canvas" style="width:100%; height:100%"></div>
 	</body>
 <html>
