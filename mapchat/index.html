@@ -38,24 +38,26 @@
 			var map;
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
+			var classmates = [];
 
 			function showClass(){
 				for (var i = 0; i < parsed.length; i++) {
-					theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lon"]);
+					theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lng"]);
 					theirMarker = new google.maps.Marker({
 						position: theirLoc,
+						map: map,
 						title: parsed[i]["login"]
 					});
-
-					theirMarker.setMap(map);
 						
 					// Open info window on click of marker
 					google.maps.event.addListener(theirMarker, 'click', function() {
 						infowindow.setContent(theirMarker.title);
 						infowindow.open(map, theirMarker);
 					});
-				};
 
+					classmates.push(theirMarker);
+				};
+				console.log(classmates);
 			}
 
 			function initialize() {
@@ -81,6 +83,7 @@
 					title: "Here I Am!"
 				});
 				marker.setMap(map);
+				console.log(marker);
 					
 				// Open info window on click of marker
 				google.maps.event.addListener(marker, 'click', function() {
