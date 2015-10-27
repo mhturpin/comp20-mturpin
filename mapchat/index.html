@@ -50,16 +50,18 @@
 							map: map,
 							title: parsed[i]["login"]
 						});
-							
-						classmates.push(theirMarker);
-						classmates[i].content = theirMarker.title;
+
+						classmates[i] = theirMarker;
+						classmates[i].content = "<div><p>" + theirMarker.title 
+									+ "</p><p>" + parsed[i]["message"] 
+									+ "</p><p>" + distance(lat, lon, theirLoc.lat(), theirLoc.lng())
+									+ "</p></div>";
 
 						// Open info window on click of marker
 						google.maps.event.addListener(classmates[i], 'click', function() {
 							infowindow.setContent(this.content);
 							infowindow.open(this.getMap(), this);
 						});
-						console.log(parsed[i]["login"]);
 					};
 				};
 			}
@@ -85,18 +87,38 @@
 	
 				marker = new google.maps.Marker({
 					position: myLocation,
-					title: "Here I Am!",
+					title: "IMConnell",
 					icon: image
 				});
 				marker.setMap(map);
 					
 				// Open info window on click of marker
 				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(marker.title);
+					infowindow.setContent("<div><p>" + marker.title + "</p></div>");
 					infowindow.open(map, marker);
 				});
+			}
 
-				//showClass();
+			// Calculate distance between 2 points
+			// Formula adapted from http://www.movable-type.co.uk/scripts/latlong.html
+			function distance(lat1, lon1, lat2, lon2) {
+				var R = 3959; // miles
+				var angle1 = toRadians(lat1);
+				var angle2 = toRadians(lat2);
+				var latDiff = toRadians(lat2-lat1);
+				var lonDiff = toRadians(lon2-lon1);
+
+				var a = Math.sin(latDiff/2) * Math.sin(latDiff/2) +
+				        Math.cos(angle1) * Math.cos(angle2) *
+				        Math.sin(lonDiff/2) * Math.sin(lonDiff/2);
+				var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+				var d = R * c;
+				return d;
+			}
+
+			function toRadians(degree) {
+				return degree * Math.PI/180;
 			}
 		</script>
 	</head>
