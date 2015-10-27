@@ -30,6 +30,7 @@
 					data = request.responseText;
 					parsed = JSON.parse(data);
 					renderMap();
+					showClass();
 				}
 			};
 
@@ -42,22 +43,25 @@
 
 			function showClass(){
 				for (var i = 0; i < parsed.length; i++) {
-					theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lng"]);
-					theirMarker = new google.maps.Marker({
-						position: theirLoc,
-						map: map,
-						title: parsed[i]["login"]
-					});
-						
-					// Open info window on click of marker
-					google.maps.event.addListener(theirMarker, 'click', function() {
-						infowindow.setContent(theirMarker.title);
-						infowindow.open(map, theirMarker);
-					});
+					if (parsed[i]["login"] != "IMConnell") {
+						theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lng"]);
+						theirMarker = new google.maps.Marker({
+							position: theirLoc,
+							map: map,
+							title: parsed[i]["login"]
+						});
+							
+						classmates.push(theirMarker);
+						classmates[i].content = theirMarker.title;
 
-					classmates.push(theirMarker);
+						// Open info window on click of marker
+						google.maps.event.addListener(classmates[i], 'click', function() {
+							infowindow.setContent(this.content);
+							infowindow.open(this.getMap(), this);
+						});
+						console.log(parsed[i]["login"]);
+					};
 				};
-				console.log(classmates);
 			}
 
 			function initialize() {
@@ -73,6 +77,7 @@
 			
 			// Updates map to current location
 			// From geolocation_map.html example
+			var image = "squirrel.png";
 			function renderMap()
 			{
 				myLocation = new google.maps.LatLng(lat, lon);
@@ -80,10 +85,10 @@
 	
 				marker = new google.maps.Marker({
 					position: myLocation,
-					title: "Here I Am!"
+					title: "Here I Am!",
+					icon: image
 				});
 				marker.setMap(map);
-				console.log(marker);
 					
 				// Open info window on click of marker
 				google.maps.event.addListener(marker, 'click', function() {
@@ -91,7 +96,7 @@
 					infowindow.open(map, marker);
 				});
 
-				showClass();
+				//showClass();
 			}
 		</script>
 	</head>
