@@ -1,6 +1,6 @@
 1. All parts of the project work. The map displays properly and the info boxes
 show username, message, and distance away. My location is represented by an 
-icon of a squirrel.
+icon of a squirrel
 
 2. I used the following websites for help
 https://developers.google.com/maps/documentation/javascript/
