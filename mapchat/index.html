@@ -102,7 +102,7 @@
 			// Calculate distance between 2 points
 			// Formula adapted from http://www.movable-type.co.uk/scripts/latlong.html
 			function distance(lat1, lon1, lat2, lon2) {
-				var R = 3959; // miles
+				var r = 3959; // miles
 				var angle1 = toRadians(lat1);
 				var angle2 = toRadians(lat2);
 				var latDiff = toRadians(lat2-lat1);
@@ -113,7 +113,7 @@
 				        Math.sin(lonDiff/2) * Math.sin(lonDiff/2);
 				var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-				var d = R * c;
+				var d = r * c;
 				return d;
 			}
 
