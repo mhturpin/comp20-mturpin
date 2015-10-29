@@ -29,13 +29,13 @@
 				if (request.readyState == 4 && request.status == 200) {
 					data = request.responseText;
 					parsed = JSON.parse(data);
-					renderMap();
 					showClass();
+					renderMap();
 				}
 			};
 
 			// Display map
-			// From geolocation_map.html example
+			// Partially from geolocation_map.html example
 			var map;
 			var marker;
 			var infowindow = new google.maps.InfoWindow();
@@ -43,26 +43,24 @@
 
 			function showClass(){
 				for (var i = 0; i < parsed.length; i++) {
-					if (parsed[i]["login"] != "IMConnell") {
-						theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lng"]);
-						theirMarker = new google.maps.Marker({
-							position: theirLoc,
-							map: map,
-							title: parsed[i]["login"]
-						});
+					theirLoc = new google.maps.LatLng(parsed[i]["lat"], parsed[i]["lng"]);
+					theirMarker = new google.maps.Marker({
+						position: theirLoc,
+						map: map,
+						title: parsed[i]["login"]
+					});
 
-						classmates[i] = theirMarker;
-						classmates[i].content = "<div><p>" + theirMarker.title 
-									+ "</p><p>" + parsed[i]["message"] 
-									+ "</p><p>" + distance(lat, lon, theirLoc.lat(), theirLoc.lng())
-									+ "</p></div>";
+					classmates[i] = theirMarker;
+					classmates[i].content = "<div><p>" + theirMarker.title 
+								+ "</p><p>" + parsed[i]["message"] 
+								+ "</p><p>" + distance(lat, lon, theirLoc.lat(), theirLoc.lng())
+								+ "</p></div>";
 
-						// Open info window on click of marker
-						google.maps.event.addListener(classmates[i], 'click', function() {
-							infowindow.setContent(this.content);
-							infowindow.open(this.getMap(), this);
-						});
-					};
+					// Open info window on click of marker
+					google.maps.event.addListener(classmates[i], 'click', function() {
+						infowindow.setContent(this.content);
+						infowindow.open(this.getMap(), this);
+					});
 				};
 			}
 
