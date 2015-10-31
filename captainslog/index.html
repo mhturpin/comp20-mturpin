@@ -4,13 +4,25 @@
 		<title>Captain's Log</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script>
-		  // Your work will be done here...
+			$(document).ready(function(){
+				$("#msg").keypress(function(e){
+					console.log('press');
+					if(e.keyCode == 13 || e.which == 13) {
+						console.log('enter');
+						$("div#log").html("<p>Hit enter</p>");
+					}
+				});
+			});
+
+
+			
+			
 		</script>
 	</head>
 
 	<body>
 		<h1>Captain's Log</h1>
 		<h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
-		<div id="log"></div>
+		<div id="log">hi</div>
 	</body>
 </html>
