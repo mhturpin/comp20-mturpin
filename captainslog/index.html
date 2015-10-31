@@ -4,17 +4,24 @@
 		<title>Captain's Log</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script>
-			messages = localStorage.getItem('messages');
+			oldMsgs = localStorage.getItem('messages').split(",");
+			newMsgs = [];
+
 			$(document).ready(function(){
+				for (var i = 0; i < oldMsgs.length; i++) {
+					$("#log").append(oldMsgs[i]);
+				};
+
 				$("#msg").keypress(function(e){
 					if(e.keyCode == 13 || e.which == 13) {
 						var d = new Date;
-						messages.prepend("<p>" + d + " - " + $("#msg").val() + "</p>");
-						$("#log").prepend(messages[0]);
+						var str = "<p>" + d + " - " + $("#msg").val() + "</p>"
+						newMsgs.unshift(str);
+						$("#log").prepend(newMsgs[0]);
 					}
+					localStorage.setItem('messages', newMsgs.concat(oldMsgs));
 				});
 			});
-			localStorage.setItem('messages', messages);
 		</script>
 	</head>
 
