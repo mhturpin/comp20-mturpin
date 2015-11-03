@@ -4,7 +4,10 @@
 		<title>Captain's Log</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script>
-			oldMsgs = localStorage.getItem('messages').split(",");
+			oldText = localStorage.getItem('messages');
+			if (oldText != null) {
+				oldMsgs = oldText.split(",");
+			}
 			newMsgs = [];
 
 			$(document).ready(function(){
