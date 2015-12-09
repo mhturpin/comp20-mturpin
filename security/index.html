@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Assignment 4</title>
+        <meta name="description" content="Assignment 4">
+        <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+        <link href="style.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <h1>Security and Privacy Assessment of Mapchat and Mapchat Server</h1>
+        <h2>Introduction</h2>
+        <p>
+        	For this assignment I had to analyze Thomas Klimek's <a href="http://tuftsdev.github.io/comp20-tklimek/mapchat/" target="_blank">mapchat application</a> and his <a href="https://secure-thicket-6827.herokuapp.com/" target="_blank">mapchat server</a> for security and privacy vulnerabilities. The mapchat application is a web application that displays a marker for every user who has logged information with the server on a map. When a marker is clicked, it shows the username, message, and distance away from the current user. 
+        </p>
+        <p>
+        	The mapchat server is what stores and handles the information for the mapchat application. The server has a home page listing all the checkins it has received. It also has a /sendLocation API, which the users send their information to and recieve all the data for other users back. Finally, it has a /latest.json API, which takes a login query and returns the document with the latest checkin for that login name. If no information is found, it returns an empty JSON object. 
+        </p>
+
+
+        <h2>Methodology</h2>
+        <p>
+        	I started with "black box" testing (testing without being able to see the source code) as this is what a hacker would have available. Although I didn't look at the source code, having done the same assignments, I had a pretty good idea of what would be vulnerable. I first looked at /latest.json. It was the most staightforward to test because I could test it using the url bar in my browser. Then I tested /sendLocation using curl in the terminal to send data to the server. I used this to try and break the home page. Then I looked at the mapchat application. I again used curl to send data since the apllication only got its data from the server.
+        </p>
+
+
+        <h2>Abstract of Findings</h2>
+        <h3>Cross-Site Scripting (XSS)</h3>
+        <p>
+        	Both server and application proved vulnerable to this attack. In XSS, the hacker sends malicious code to the website, which then gets executed.
+        </p>
+        <h3>Improperly Accessing Database</h3>
+        <p>
+        	The /latest.json API is supposed to take a login as a prameter and return the most recent checkin for that login. However, by altering the parameter you can make the API return checkins without putting in a valid login.
+        </p>
+        <h3>Cross Origin Access</h3>
+        <p>
+        	The /sendLocation API allows access from any domain. This could be a problem because anyone could send data to the database with /sendLocation and potentially impersonate another user. 
+        </p>
+
+
+        <h2>Issues Found</h2>
+        <h3>Cross-Site Scripting (XSS)</h3>
+        <p>
+			The server's home page is vulnerable to XSS. This is a very severe issue. It allows a hacker to do anything they want with the home page since the message will be loaded for everyone that views the page. The hacker can redirect the page, post their own content, steal the users cookies (if the page has any), and much more. Since I knew the home page incorperated all the messages into its HTML, I figured it might be vulnerable to script injection.
+		</p>
+        <p>
+			For example, if I make my message:<br>&lt;script&gt;alert(&quot;Hacked&quot;)&lt;/script&gt;<br>
+			I get the following result:
+		</p>
+		<img src="server_xss.jpg" alt="Hacked alert server"/>
+		<p>
+			This is a pretty easy fix to make. All that's needed is to add a line in the code that strips out special characters:<br>
+			message = message.replace(/[^\w\s]/gi, &#39;&#39;);<br>
+			This removes all characters that aren't letters, numbers, underscores, or white spaces.
+		</p>
+
+		<h3>Cross-Site Scripting (XSS)</h3>
+		<p>
+			The mapchat application is also vulnerable to XSS. As with the server, this is a very severe issue as it allows the hacker to take complete control of the site. I knew that the application incorporated the messages into the HTML, so first I tried injecting with script tags as I had in the server hack. This was not successful, so I did some research and found that javascript can be injected using an image with a bogus source and its onerror event set to the malicious code. (As a side note this also works on the server)
+		</p>
+        <p>
+			For example, if message = &lt;img src=&quot;/&quot; onerror = &quot;alert(&#39;Hacked&#39;)&quot;/&gt;<br>
+			I get the following result, but only once the info window containing the malicious message is opened. 
+		</p>
+		<img src="mapchat_xss.jpg" alt="Hacked alert mapchat"/>
+		<p>
+			The fix for this is the same as for the server. Before any user supplied text is outputted onto the screen, it should be stripped of any special characters.
+		</p>
+
+		<h3>Improperly Accessing Database</h3>
+        <p>
+        	The /latest.json API is supposed to take a login as a prameter and return the most recent checkin for that login. However, by altering the parameter you can make the API return checkins without putting in a valid login. This is a medium security risk. The logins are already available to anyone from the home page, so accessing them this way is not immediately harmful, but it could potentially be if there were records in the database that you didn't want anyone to access. I found this by searching for mongodb hacks and I found a <a href="http://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html" target="_blank">very informative article</a>.
+        </p>
+		<p>
+			All of these links are various ways to get data in a way you shouldn't be able to. The first means not equal, the second means greater than, and the last means find a login starting with k. It would be pretty easy to write a script to find all logins entered in the database with the regex method.
+			https://secure-thicket-6827.herokuapp.com/latest.json?login[$ne]=<br>
+			https://secure-thicket-6827.herokuapp.com/latest.json?login[$gt]=<br>
+			https://secure-thicket-6827.herokuapp.com/latest.json?login[$regex]=^k
+		</p>
+		<img src="latest_regex.jpg" alt="Hacked alert mapchat"/>
+		<p>
+			Anyone can submit data and impersonate someone else because the only thing being 
+			checked is whether the login is valid<br>
+		</p>
+		<p>
+			response.header('Access-Control-Allow-Origin', '*');
+        </p>
+
+        <h2>Conclusion</h2>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+
+
+
+
+
+Script injection
+Server vulnerable 
+Ex: If message = <script>alert("Hacked")</script>
+But mapchat (assignment 2) not affected
+However if message = <img src="/" onerror = "alert('Hacked')"/>
+then the function given for onerror will be run when the corresponding info window is clicked. 
+It will also run on the server home page when it loads
+
+
+https://secure-thicket-6827.herokuapp.com/latest.json?login[$ne]=
+https://secure-thicket-6827.herokuapp.com/latest.json?login[$gt]=
+https://secure-thicket-6827.herokuapp.com/latest.json?login[$regex]=^k
+
+Anyone can submit data and impersonate someone else because the only thing being 
+checked is whether the login is valid
+response.header('Access-Control-Allow-Origin', '*');
+
+http://tuftsdev.github.io/comp20-tklimek/mapchat/
+https://secure-thicket-6827.herokuapp.com/
