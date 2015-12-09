@@ -79,15 +79,26 @@
 			https://secure-thicket-6827.herokuapp.com/latest.json?login[$gt]=<br>
 			https://secure-thicket-6827.herokuapp.com/latest.json?login[$regex]=^k
 		</p>
-		<img src="latest_regex.jpg" alt="Hacked alert mapchat"/>
+		<img src="latest_regex.jpg" alt="/latest.json regex hack"/>
 		<p>
-			Anyone can submit data and impersonate someone else because the only thing being 
-			checked is whether the login is valid<br>
+			This vulnerability can be addressed by first reading in the login, then making sure the thing given isn't a JSON object and is just a string.
 		</p>
-		<p>
-			response.header('Access-Control-Allow-Origin', '*');
+
+		<h3>Cross Origin Access</h3>
+        <p>
+        	The /sendLocation API allows access from any domain. I found this by looking at the source code and seeing that it said:<br>
+        	 response.header(&#39;Access-Control-Allow-Origin&#39;, &#39;*&#39;);
         </p>
+		<p>
+			This is a high security problem because anyone can submit data and impersonate someone else. The only thing being checked when data is submitted is whether the login is valid. Therefore, if I know someone elses login, I can submit data as if I were them. This could be addressed by only accepting data from pre-decided URLs. This approach might get messy though if many URLs are acceptable, although if they are all from the same domain, you could say:<br>
+			response.header(&#39;Access-Control-Allow-Origin&#39;, &#39;http://tuftsdev.github.io/*&#39;);<br>
+			to allow only URLs starting with http://tuftsdev.github.io/. Another possibility is that each login could have their own password to add a further layer of security. This would be more complicated, though, because the password authentication would have to be implimented and could get confusing.
+		</p>
+
 
         <h2>Conclusion</h2>
+        <p>
+        	In its current state, both the mapchat server and application have severe security flaws. Luckily the most dangerous one, cross-site scripting, is easy to mitigate. All that needs to be done is sanitize user input before incorperating it into the HTML. The second vulnerability, improper access of the database, could also be solved relatively easily by making sure that the inputs are only strings and not objects. The final issue of cross origin access is slightly more complicated to solve. Going with only accepting input from a certain domain would probably be the easiest solution. Trying to implement a password system could get complicated, although it might be a better option if higher security is a priority.
+        </p>
     </body>
 </html>
