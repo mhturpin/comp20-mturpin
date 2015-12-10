@@ -19,7 +19,7 @@
 				$("#msg").keypress(function(e){
 					if(e.keyCode == 13 || e.which == 13) {
 						var d = new Date;
-						var str = "<p>" + d + " - " + $("#msg").val() + "</p>"
+						var str = "<p>" + d + " - " + $("#msg").val() + "</p>";
 						newMsgs.unshift(str);
 						$("#log").prepend(newMsgs[0]);
 					}
